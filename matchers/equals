@@ -1,0 +1,17 @@
+#!/bin/bash
+
+equal_test=$@
+
+# read stdin
+read <&0;
+read_response="$REPLY"
+
+# match
+echo "to equal $equal_test"
+
+# test
+if [ "$read_response" == "$equal_test" ] ; then
+	exit 0
+else
+	exit 1
+fi

@@ -1,0 +1,5 @@
+#configuration
+
+timeout=120
+
+base_url="http://example.yourhostname.tld"

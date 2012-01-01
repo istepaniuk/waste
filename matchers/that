@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# 
+# this matchers relays stdin and parameters to the next specified matcher
+# it also repeats to stdout the matcher output
+
+# params
+parameters=("${@}")
+command=$1
+
+if [ ! -x "matchers/$command" ] ; then
+	echo Specified matcher [$command] does not exist
+	exit 2
+fi
+
+# remove first parameter (next matcher)
+unset parameters[0]
+parameters=${parameters[*]}
+
+# read stdin
+read <&0;
+read_response="$REPLY"
+
+# relay stdin to next matcher
+matcher_out=$(echo -n "$read_response" | matchers/$command $parameters)
+result=${PIPESTATUS}
+echo $matcher_out
+
+exit $result

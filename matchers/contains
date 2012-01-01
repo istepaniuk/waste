@@ -1,0 +1,25 @@
+#!/bin/bash
+
+
+contain_test=$@
+
+# read stdin
+read <&0;
+read_response="$REPLY"
+
+# test
+echo -n "$read_response" | grep "$contain_test" > /dev/null
+result=$?
+
+# handle empty input
+if [ "$read_response" == "" ] ; then
+	read_response="[nothing at all]"
+fi
+
+# match
+echo "to contain $contain_test"
+if [ "$result" -gt "0" ] ; then
+	exit 1
+fi
+
+exit 0

@@ -1,0 +1,20 @@
+#Example simulation script
+
+GET "/static/index.html"
+EXPECT contains main_content
+
+POST "/controllers/validate" "id=14&action=confirm"
+EXPECT contains \"result\":\"success\"
+
+WAIT 2
+
+POST "/controllers/validate" "id=12&action=confirm"
+EXPECT contains \"result\":\"success\"
+
+GET "/static/confirm.php?action=delete"
+EXPECT contains main_content
+
+WAIT 1
+
+POST "/controllers/delete" "id=12"
+EXPECT contains wasValid\":true

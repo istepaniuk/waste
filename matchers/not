@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# 
+# this matchers relays stdin and parameters to the next specified matcher
+# and negates the output
+#
+
+# params
+parameters=("${@}")
+command=$1
+# remove first parameter (next matcher)
+unset parameters[0]
+parameters=${parameters[*]}
+
+# read stdin
+read <&0;
+read_response="$REPLY"
+
+# relay stdin to matcher
+matcher_out=$(echo -n "$read_response" | matchers/$command $parameters)
+result=${PIPESTATUS}
+echo "not $matcher_out"
+
+if [ "$result" == "0" ] ; then
+	exit 1
+else
+	exit 0
+fi
