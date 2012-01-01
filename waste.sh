@@ -2,8 +2,6 @@
 
 [[ -r "$1" ]] || { echo "Usage: $0 simulation_script_file.sim"; exit 1 ; }
 
-script_file=$1
-
 source config
 
 # params
