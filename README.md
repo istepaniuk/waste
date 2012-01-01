@@ -13,3 +13,5 @@ EXPECT conditions can be customized as separated scripts or programs that take t
 A launch.sh script that launches N simulation sessions in the background is provided.
 
 Be aware that a system wide limitation for process forking may be in place in your system. It is generally set in /etc/security/limits.conf, refered as nprocs. Your mileage may vary.
+
+I would like to thank Carlos Blé (@carlosble) for his infinite patience while debugging together our web application. It had a difficult to reproduce transaction concurrence problem and this script helped us spotting it.
