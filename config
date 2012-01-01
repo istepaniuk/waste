@@ -2,4 +2,4 @@
 
 timeout=120
 
-base_url="http://example.yourhostname.tld"
+base_url="http://localhost"

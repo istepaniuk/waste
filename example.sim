@@ -1,20 +1,20 @@
 #Example simulation script
 
 GET "/static/index.html"
-EXPECT contains main_content
+EXPECT it to contain main_content
 
 POST "/controllers/validate" "id=14&action=confirm"
-EXPECT contains \"result\":\"success\"
+EXPECT that it does not contain \"result\":\"error\"
 
 WAIT 2
 
 POST "/controllers/validate" "id=12&action=confirm"
-EXPECT contains \"result\":\"success\"
+EXPECT it to contain \"result\":\"success\"
 
 GET "/static/confirm.php?action=delete"
-EXPECT contains main_content
+EXPECT that it contains main_content
 
 WAIT 1
 
 POST "/controllers/delete" "id=12"
-EXPECT contains wasValid\":true
+EXPECT that contains wasValid\":true

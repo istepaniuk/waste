@@ -30,6 +30,11 @@ total_cumulative_waiting_time_ms=15
 last_elapsed_ms=0
 last_elapsed_secs=0
 
+function cleanup {
+	rm -f $wget_response
+	rm -f $wget_out
+}
+
 function update_elapsed_time {
 	echo $last_elapsed_secs |grep "exited with non-zero status" > /dev/null
 	if [ "$?" == "0" ] ; then
@@ -66,30 +71,38 @@ function do_post {
 
 function run_expect {
 	# params
-	command=$1
-	arguments=$2
-	
-	echo "$(cat $wget_response)" | ./matchers/$command $arguments
-	if [ "$?" == "0" ] ; then
+	parameters=("${@}")
+	unset parameters[0]
+	command=${parameters[2]}
+	unset parameters[2]
+	line_number=${parameters[1]}
+	unset parameters[1]
+	parameters=${parameters[*]}
+
+	matcher_output=$(echo $(cat $wget_response) | ./matchers/$command $parameters)
+	result=$PIPESTATUS	
+
+	if [ "$result" == "0" ] ; then
 		command_result="${tp_grn}PASSED${tp_rst}"
 	else
-		command_result="${tp_red}FAILED${tp_rst}"
+		command_result="${tp_red}FAILED${tp_rst} $matcher_output [$(cat $wget_response)]"
 	fi
 }
 
 function execute_line {
 	# params
-	line_number=$1
-	command=$2
+	sim_line_number=$1
+	sim_command=$2
 	argument1=$3
 	argument2=$4
+	all_arguments="${@}"
 
 	# is it a comment?
-	if [ "${command:0:1}" == "#" ] ; then
+	if [ "${sim_command:0:1}" == "#" ] ; then
 		return 0
 	fi
 		
-	case $command in
+	case $sim_command in
 		WAIT)
 			sleep $argument1
 			return 0
@@ -98,23 +111,23 @@ function execute_line {
 			do_get $argument1 $argument2
 		;;
 		POST)
-
 			do_post $argument1 $argument2
 		;;
 		EXPECT)
-			run_expect $argument1 $argument2
+			run_expect $all_arguments
 		;;
 		*)
 			return 1
 		;;		
 	esac
 	
-	echo -e $$:$command-$line_number: $command_result
+
+	echo -e $$:$sim_command-$sim_line_number: $command_result
 }
 
 function excecute_every_line_in_script {
 	script_file=$1
-	line_number=0
+	line_number=1
 	while read line; do
 		execute_line $line_number $line
 		let line_number=$line_number+1
@@ -124,4 +137,7 @@ function excecute_every_line_in_script {
 # function main ()
 excecute_every_line_in_script "$sim_script_file"
 echo $$:CUMULATIVE: $total_cumulative_waiting_time_ms
+
+cleanup	
+
 exit 0
