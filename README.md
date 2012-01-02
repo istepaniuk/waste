@@ -1,4 +1,4 @@
-# WASTE is a Wget based Automatic Stress TEsting tool. 
+# WASTE - Wget based Automatic Stress TEsting tool. 
 
 WASTE is a fairly simple bash script that evolved from just forking wget instances in background. Although it is not the most efficient approach, Wget is very light and any modern system can easily spawn hundreds of instances without much effort.
 
