@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo pis > /tmp/hola
-
 contain_test=$@
 
 # read stdin
