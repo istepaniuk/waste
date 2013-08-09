@@ -72,6 +72,9 @@ The output consists in a line per POST, GET or EXPECT, containing the script PID
     
 When an EXPECT fails, the condition is printed followed by the actual response data inside square brakets.    
 
+## Limitations
+forking wget processes is a very inefficient way to make HTTP connections, this means that it is relatively easy to saturate the client, and that using the same box as client and server would adversely affect the actual performance.
+
 ## Aknowledgements
 * Hrvoje Nikšić and Giuseppe Scrivano for the great [GNU Wget](http://www.gnu.org/software/wget/)
 * Carlos Blé (@carlosble) for his infinite patience while debugging together our web application.
